@@ -12,8 +12,9 @@ spring:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
   shardingsphere:
     datasource:
+      type: com.alibaba.druid.pool.DruidDataSource
       names: ds0,ds1
-      ds0:
+      ds0: #配置数据源
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
         jdbc-url: jdbc:mysql://182.61.49.227:3306/siso_java_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = GMT
@@ -26,6 +27,22 @@ spring:
         jdbc-url: jdbc:mysql://182.61.49.227:3306/siso_java?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = GMT
         username: root
         password: h102
+
+      druid: #配置druid缓存
+        max-active: 100
+        min-idle: 10
+        max-wait: 6000
+        filter:
+          stat:
+            merge-sql: true
+            slow-sql-millis: 200
+        test-on-borrow: true
+        validation-query: SELECT 1
+        use-global-data-source-stat: true
+        filters: stat,wall,slf4j
+        pool-prepared-statements: true
+        max-pool-prepared-statement-per-connection-size: 40
+
 #      config:
 #        masterslave: # 配置读写分离
 #          load-balance-algorithm-type: round_robin # 配置从库选择策略random（随机）round_robin（轮循）
