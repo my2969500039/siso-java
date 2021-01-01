@@ -10,6 +10,8 @@ spring:
 #    username: siso_java
 #    password: 12345678
 #    driver-class-name: com.mysql.cj.jdbc.Driver
+  main:
+    allow-bean-definition-overriding: true  #相同配置可以覆盖
   shardingsphere:
     datasource:
       type: com.alibaba.druid.pool.DruidDataSource
