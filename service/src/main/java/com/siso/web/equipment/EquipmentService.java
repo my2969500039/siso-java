@@ -9,6 +9,7 @@ import com.siso.response.web.equipment.equipmentResponse;
 import io.swagger.annotations.ApiParam;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -27,5 +28,7 @@ public interface EquipmentService {
     Result<adminEquipment>getOne(Long id);
 
     Result<String> add( AddEquipmentRequest request);
+
+    Result<String> delete(Long id);
 
 }

@@ -75,12 +75,19 @@ public class equipmentController {
             }
         }
         return equipmentService.add(request);
+    }
 
+    /** * 添加设备
+     * @return */
+    @ApiOperation(value = "删除设备")
+    @DeleteMapping(value = "/{id}")
+    public  Result<String> delete(@PathVariable("id")Long id)  {
 
+        return equipmentService.delete(id);
     }
 
     @ApiOperation(value = "获取设备详情")
-    @PostMapping(value = "/one/{id}")//url
+    @GetMapping(value = "/one/{id}")//url
     public Result<adminEquipment>getOne(@ApiParam("设备Id")@PathVariable("id")Long id) {
         return equipmentService.getOne(id);
     }

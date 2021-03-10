@@ -103,7 +103,13 @@ public class EquipmentServiceImpl implements EquipmentService {
         return Result.<String>builder().success().message("保存成功").build();
     }
 
-    ;
+    @Override
+    @Transactional
+    public Result<String> delete(Long id) {
+        equipmentRepository.deleteById(id);
+        return Result.<String>builder().success().message("删除成功").build();
+    }
+
 
 
 
