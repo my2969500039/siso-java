@@ -6,8 +6,10 @@ import com.siso.request.web.equipment.UpdateEquipmentRequest;
 import com.siso.Result.Result;
 import com.siso.web.equipment.impl.EquipmentServiceImpl;
 import com.siso.web.userManage.UserService;
+import io.lettuce.core.dynamic.annotation.Param;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,16 +27,15 @@ import java.util.List;
 public class equipmentController {
 
     @Autowired
-    private EquipmentServiceImpl equipmentService;
+    private EquipmentService equipmentService;
 
     @Autowired
     private UserService userService;
 
-
     /** * 获取名下设备
      * @return */
     @ApiOperation(value = "获取名下所有设备")
-    @PostMapping(value = "/Equipment",produces="application/json;charset=UTF-8")//url注解，定义请求方式，字符串编码
+    @PostMapping(value = "/Equipment")//url注解，定义请求方式，字符串编码
     @RequiresPermissions("equipment:eqseek")
     public Result<Page<adminEquipment>>findEquipment(@Valid @RequestBody PageEquipmentRequest request, BindingResult result){
         if (result.hasErrors()) {
@@ -49,7 +50,7 @@ public class equipmentController {
     /** * 划转名下设备
      * @return */
     @ApiOperation(value = "划转名下设备")
-    @RequestMapping(value = "/updateEquipment",method= RequestMethod.POST,produces="application/json;charset=UTF-8")//url注解，定义请求方式，字符串编码
+    @PostMapping(value = "/updateEquipment")//url注解，定义请求方式，字符串编码
     public  @ResponseBody Result<String> updateEquipment(@Valid @RequestBody UpdateEquipmentRequest request,BindingResult result){
         if (result.hasErrors()) {
             for (ObjectError error : result.getAllErrors()) {
@@ -76,21 +77,13 @@ public class equipmentController {
 //
 //
 //    }
-//
-//
-//
-//
-//    @ApiOperation(value = "获取设备详情", notes = "获取设备详情", code = 200, produces = "application/json")
-//    @RequestMapping(value = "/equipmentdetails",method= RequestMethod.POST,produces="application/json;charset=UTF-8")//url
-//    public Result<List<EquipmentdetailResponse>>equipmentdetails(@Valid EquipmentRequest request, BindingResult result) throws ParseException {
-//        if (result.hasErrors()){
-//            for (ObjectError error : result.getAllErrors()) {
-//                return Result.<List<EquipmentdetailResponse>>builder().fail().code(500).message(error.getDefaultMessage()).build();
-//            }
-//        }
-//        return equipmentService.equipmentdetails(request);
-//    }
-//
+
+    @ApiOperation(value = "获取设备详情")
+    @PostMapping(value = "/one/{id}")//url
+    public Result<adminEquipment>getOne(@ApiParam("设备Id")@PathVariable("id")Long id) {
+        return equipmentService.getOne(id);
+    }
+
 
 
 

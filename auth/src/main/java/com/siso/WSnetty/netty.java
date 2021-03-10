@@ -14,7 +14,8 @@ import javax.annotation.PostConstruct;
 
 
 @Slf4j
-public class netty extends Thread{
+@Component
+public class netty{
 
     public void start(){
         System.out.println("启动成功");

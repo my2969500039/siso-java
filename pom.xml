@@ -25,6 +25,7 @@
         <module>web</module>
         <module>auth</module>
         <module>core</module>
+        <module>test</module>
     </modules>
 
 
@@ -49,5 +50,24 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <!--如果想在没有web.xml文件的情况下构建WAR，请设置为false。-->
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+        <finalName>siso</finalName>
+    </build>
 
 </project>

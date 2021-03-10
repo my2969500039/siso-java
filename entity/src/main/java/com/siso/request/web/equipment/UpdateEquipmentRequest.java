@@ -13,5 +13,5 @@ public class UpdateEquipmentRequest {
 
     @NotBlank(message = "接收人不能为空")
     @NotNull(message = "接收人不能为空")
-    private String userId;
+    private Long userId;
 }

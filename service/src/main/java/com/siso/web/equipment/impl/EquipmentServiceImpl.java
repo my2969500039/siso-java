@@ -4,14 +4,12 @@ import com.google.common.collect.Lists;
 import com.siso.Result.Result;
 import com.siso.dto.CMSUserDTO;
 import com.siso.entity.web.equipMent.adminEquipment;
+import com.siso.exception.NormalException;
 import com.siso.request.web.equipment.PageEquipmentRequest;
 import com.siso.request.web.equipment.UpdateEquipmentRequest;
 import com.siso.repository.web.equipment.EquipmentRepository;
-import com.siso.request.web.equipment.AddEquipmentRequest;
-import com.siso.response.web.equipment.equipmentResponse;
 import com.siso.token.TokenUtils;
 import com.siso.web.equipment.EquipmentService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,13 +17,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
-import java.io.NotActiveException;
+import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,20 +34,6 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Autowired
     private TokenUtils tokenUtils;
-//    @Override
-//    public Result<List<equipDetailResponse>> equipmentdetails(EquipmentRequest request) throws ParseException {
-//        String time= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
-//        List<equipDetailResponse> equipmentResponseList=equipmentdetails.findAllById(request.getEquipmentId());
-//        for (equipDetailResponse e:equipmentResponseList
-//             ) {
-//            if(e.getState().equals("1")){
-//                e.setOnline("在线时长   "+date(e.getOnline(),time));
-//            }
-//            else e.setOnline("离线时长  "+date(e.getOnline(),time));
-//        }
-//        return Result.< List<equipDetailResponse>>builder().success().data(equipmentResponseList).build();
-//    };
-
 
     public String date(String endtime,String greattime) throws ParseException {
         SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -86,59 +70,26 @@ public class EquipmentServiceImpl implements EquipmentService {
     };
 
 
-    //管理员查询名下设备
-    @Override
-    public List<adminEquipment> admin_equipment(String userNumber){
-        CMSUserDTO cmsUserDTO=tokenUtils.getLoginUserDTO();
-        return equipmentRepository.findAllByUserId(cmsUserDTO.getId());
-    };
-
-
 
     //划转名下设备
     @Override
+    @Transactional
     public Result<String> updateEquipment(UpdateEquipmentRequest request){
         CMSUserDTO cmsUserDTO=tokenUtils.getLoginUserDTO();
         adminEquipment adminEquipment = equipmentRepository.findOneByUserIdAndId(cmsUserDTO.getId(),request.getId());
+        if (adminEquipment==null)
+            throw new NormalException("设备不存在");
+        adminEquipment.setUserId(request.getUserId());
+        equipmentRepository.save(adminEquipment);
         return Result.<String>builder().success().message("划转成功").build();
     };
 
-
-
-    //划转指定设备
     @Override
-    public Boolean update_equipment_id(String userNumber,String staff_Number,String equipment_id){
-        System.out.println("账号"+userNumber+"请求划转名下设备");
-//        return  equipmentdetails.update_equipment_id(staff_Number,equipment_id);
-        return  null;
-
-    };
-
-    //添加设备
-    @Override
-    public Result<List<equipmentResponse>> add_equi(AddEquipmentRequest request) throws NotActiveException {
-        adminEquipment equipment=new adminEquipment();
-        BeanUtils.copyProperties(request,equipment);
-        equipment=equipmentRepository.save(equipment);
-        if (equipment.getId()!=null) {
-            List<adminEquipment> equipmentResponseList=equipmentRepository.findAllByMarketId(request.getMarket());
-            List<equipmentResponse>equipmentResponses=new ArrayList<>();
-            equipmentResponseList.forEach(e->{
-                equipmentResponse equipmentResponse = new equipmentResponse();
-                BeanUtils.copyProperties(e,equipmentResponse);
-                equipmentResponses.add(equipmentResponse);
-            });
-            return Result.< List<equipmentResponse>>builder().success().data(equipmentResponses).build();
-        }
-            else throw new NotActiveException("添加失败");
-
-    }
-
-
-    //通过超市查询名下设备
-    @Override
-    public List<adminEquipment> getEquipment(Long userNumber,Long market){
-        return equipmentRepository.findAllByUserIdAndMarketId(userNumber, market);
+    public Result<adminEquipment>getOne(Long id){
+        adminEquipment adminEquipment=equipmentRepository.findOneById(id);
+        if (adminEquipment==null)
+            throw new NormalException("设备不存在");
+        return Result.<adminEquipment>builder().success().data(adminEquipment).build();
     };
 
 
