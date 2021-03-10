@@ -1,6 +1,7 @@
 package com.siso.web.equipment;
 
 import com.siso.entity.web.equipMent.adminEquipment;
+import com.siso.request.web.equipment.AddEquipmentRequest;
 import com.siso.request.web.equipment.PageEquipmentRequest;
 import com.siso.request.web.equipment.UpdateEquipmentRequest;
 import com.siso.Result.Result;
@@ -62,21 +63,21 @@ public class equipmentController {
 
 
 
-//
-//    /** * 添加设备
-//     * @return */// TODO: 2020/10/25 权限管理，需要管理员权限
-//    @ApiOperation(value = "添加设备")
-//    @RequestMapping(value = "/add_equiment",method= RequestMethod.POST,produces="application/json;charset=UTF-8")//url注解，定义请求方式，字符串编码
-//    public  Result<List<EquipmentResponse>> add_equiment(@Valid AddEquipmentRequest request, BindingResult result) throws NotActiveException {
-//        if (result.hasErrors()){
-//            for (ObjectError error : result.getAllErrors()) {
-//                return Result.<List<EquipmentResponse>>builder().fail().code(500).message(error.getDefaultMessage()).build();
-//            }
-//        }
-//        return equipmentService.add_equi(request);
-//
-//
-//    }
+
+    /** * 添加设备
+     * @return */
+    @ApiOperation(value = "添加设备")
+    @PostMapping(value = "/post")
+    public  Result<String> add(@Valid @RequestBody AddEquipmentRequest request, BindingResult result)  {
+        if (result.hasErrors()){
+            for (ObjectError error : result.getAllErrors()) {
+                return Result.<String>builder().fail().code(500).message(error.getDefaultMessage()).build();
+            }
+        }
+        return equipmentService.add(request);
+
+
+    }
 
     @ApiOperation(value = "获取设备详情")
     @PostMapping(value = "/one/{id}")//url

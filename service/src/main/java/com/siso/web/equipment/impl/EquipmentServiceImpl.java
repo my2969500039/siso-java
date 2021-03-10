@@ -5,11 +5,13 @@ import com.siso.Result.Result;
 import com.siso.dto.CMSUserDTO;
 import com.siso.entity.web.equipMent.adminEquipment;
 import com.siso.exception.NormalException;
+import com.siso.request.web.equipment.AddEquipmentRequest;
 import com.siso.request.web.equipment.PageEquipmentRequest;
 import com.siso.request.web.equipment.UpdateEquipmentRequest;
 import com.siso.repository.web.equipment.EquipmentRepository;
 import com.siso.token.TokenUtils;
 import com.siso.web.equipment.EquipmentService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -90,7 +92,18 @@ public class EquipmentServiceImpl implements EquipmentService {
         if (adminEquipment==null)
             throw new NormalException("设备不存在");
         return Result.<adminEquipment>builder().success().data(adminEquipment).build();
-    };
+    }
+
+    @Override
+    @Transactional
+    public Result<String> add(AddEquipmentRequest request) {
+        adminEquipment adminEquipment=new adminEquipment();
+        BeanUtils.copyProperties(request,adminEquipment);
+        equipmentRepository.save(adminEquipment);
+        return Result.<String>builder().success().message("保存成功").build();
+    }
+
+    ;
 
 
 

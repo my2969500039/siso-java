@@ -37,4 +37,7 @@ public class adminEquipment extends BaseEntity {
     @ApiModelProperty(value = "设备编号")
     private String number;
 
+    @ApiModelProperty(value = "设备简介")
+    private String detail;
+
 }
