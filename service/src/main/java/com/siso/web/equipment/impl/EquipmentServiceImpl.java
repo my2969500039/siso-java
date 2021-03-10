@@ -110,8 +110,16 @@ public class EquipmentServiceImpl implements EquipmentService {
         return Result.<String>builder().success().message("删除成功").build();
     }
 
-
-
+    @Override
+    @Transactional
+    public Result<String> available(Long id) {
+        adminEquipment adminEquipment=equipmentRepository.findOneById(id);
+        if (adminEquipment==null)
+            throw new NormalException("设备不存在");
+        adminEquipment.setAvailable(!adminEquipment.getAvailable());
+        equipmentRepository.save(adminEquipment);
+        return Result.<String>builder().success().message(adminEquipment.getAvailable()?"启用成功":"禁用成功").build();
+    }
 
 
 }

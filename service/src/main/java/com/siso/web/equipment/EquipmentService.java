@@ -31,4 +31,6 @@ public interface EquipmentService {
 
     Result<String> delete(Long id);
 
+    Result<String>available(Long id);
+
 }

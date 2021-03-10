@@ -81,7 +81,7 @@ public class equipmentController {
      * @return */
     @ApiOperation(value = "删除设备")
     @DeleteMapping(value = "/{id}")
-    public  Result<String> delete(@PathVariable("id")Long id)  {
+    public  Result<String> delete(@ApiParam("设备Id") @PathVariable("id")Long id)  {
 
         return equipmentService.delete(id);
     }
@@ -90,6 +90,13 @@ public class equipmentController {
     @GetMapping(value = "/one/{id}")//url
     public Result<adminEquipment>getOne(@ApiParam("设备Id")@PathVariable("id")Long id) {
         return equipmentService.getOne(id);
+    }
+
+
+    @ApiOperation(value = "获取设备详情")
+    @PatchMapping(value = "/{id}")//url
+    public Result<String>available(@ApiParam("设备Id")@PathVariable("id")Long id) {
+        return equipmentService.available(id);
     }
 
 
