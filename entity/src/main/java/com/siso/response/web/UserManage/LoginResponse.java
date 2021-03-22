@@ -1,7 +1,7 @@
 package com.siso.response.web.UserManage;
 
 
-import com.siso.entity.web.permission.adminPermission;
+import com.siso.entity.web.permission.AdminPermission;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,7 +12,7 @@ public class LoginResponse implements Serializable {
 
     private String token;
     private UserTokenResponse userTokenResponse;
-    private List<adminPermission> adminPermission;
+    private List<AdminPermission> adminPermission;
 
 
 }

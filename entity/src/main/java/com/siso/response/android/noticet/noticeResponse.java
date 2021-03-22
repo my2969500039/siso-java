@@ -1,7 +1,6 @@
 package com.siso.response.android.noticet;
 
 
-import com.siso.entity.web.userManage.adminUser;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

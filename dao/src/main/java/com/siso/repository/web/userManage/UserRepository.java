@@ -1,27 +1,26 @@
 package com.siso.repository.web.userManage;
 
 
-import com.siso.entity.web.userManage.adminUser;
+import com.siso.entity.web.userManage.AdminUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * 帐户dao接口
  */
-public interface UserRepository extends JpaRepository<adminUser,String>{
+public interface UserRepository extends JpaRepository<AdminUser,String>{
 
     // 用户登录
-    adminUser findOneByNumber(String userNumber);
+    AdminUser findOneByNumber(String userNumber);
 
-    Optional<adminUser> findById(Long Id);
+    Optional<AdminUser> findById(Long Id);
 
-    adminUser findOneById(Long Id);
+    AdminUser findOneById(Long Id);
 
 
-    List<adminUser> findAllByParentId(Long parentId);
+    List<AdminUser> findAllByParentId(Long parentId);
 
 
     //删除下级员工

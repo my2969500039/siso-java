@@ -3,7 +3,7 @@ package com.siso.token;
 import com.siso.dto.CMSPermissionDTO;
 import com.siso.dto.CMSUserDTO;
 import com.siso.entity.android.userManage.androidUser;
-import com.siso.entity.web.userManage.adminUser;
+import com.siso.entity.web.userManage.AdminUser;
 import com.siso.exception.NormalException;
 import com.siso.repository.web.userManage.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -100,11 +100,11 @@ public class TokenUtils {
      * @return
      */
     public CMSUserDTO getUserInfo(Long userId) {
-        Optional<adminUser> cmsUserOptional = userRepository.findById(userId);
+        Optional<AdminUser> cmsUserOptional = userRepository.findById(userId);
         if (cmsUserOptional.isEmpty()) {
             return null;
         }
-        adminUser cmsUser = cmsUserOptional.get();
+        AdminUser cmsUser = cmsUserOptional.get();
         return this.convertCMSUser(cmsUser);
     }
 
@@ -114,7 +114,7 @@ public class TokenUtils {
      * @param cmsUser
      * @return
      */
-    public String generateTokeCode(adminUser cmsUser, List<CMSPermissionDTO> cmsPermissionDTOS) {
+    public String generateTokeCode(AdminUser cmsUser, List<CMSPermissionDTO> cmsPermissionDTOS) {
         CMSUserDTO cmsUserDTO = this.convertCMSUser(cmsUser);
         cmsUserDTO.setPermissions(cmsPermissionDTOS);
         String value = System.currentTimeMillis() + new Random().nextInt() + "";
@@ -183,7 +183,7 @@ public class TokenUtils {
         });
     }
 
-    private CMSUserDTO convertCMSUser(adminUser cmsUser) {
+    private CMSUserDTO convertCMSUser(AdminUser cmsUser) {
         CMSUserDTO parkUserDTO = new CMSUserDTO();
         BeanUtils.copyProperties(cmsUser, parkUserDTO);
         return parkUserDTO;

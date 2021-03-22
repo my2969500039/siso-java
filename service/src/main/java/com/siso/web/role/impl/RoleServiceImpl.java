@@ -1,7 +1,7 @@
 package com.siso.web.role.impl;
 
 import com.siso.Result.Result;
-import com.siso.entity.web.permission.adminPermission;
+import com.siso.entity.web.permission.AdminPermission;
 import com.siso.entity.web.role.Role;
 import com.siso.entity.web.role.RolePermission;
 import com.siso.exception.NormalException;
@@ -11,7 +11,6 @@ import com.siso.repository.web.role.RoleRepository;
 import com.siso.request.web.role.AddRoleRequest;
 import com.siso.request.web.role.SetRolePermissionRequest;
 import com.siso.response.web.permission.PermissionResponse;
-import com.siso.response.web.region.RegionResponse;
 import com.siso.web.role.RoleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Result<List<PermissionResponse>> searchPermission() {
-        List<adminPermission>adminPermissionList=permissionRepository.findAll();
+        List<AdminPermission>adminPermissionList=permissionRepository.findAll();
         List<PermissionResponse>permissionResponseList=new ArrayList<>();
         adminPermissionList.forEach(a->{
             PermissionResponse permissionResponse=new PermissionResponse();

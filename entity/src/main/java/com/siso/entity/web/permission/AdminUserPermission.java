@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "admin_user_permission")
 @Table(name = "admin_user_permission")
-public class adminUserPermission extends BaseEntity {
+public class AdminUserPermission extends BaseEntity {
 
     private Long userId;
 

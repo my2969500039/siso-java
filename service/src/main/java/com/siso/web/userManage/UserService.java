@@ -1,10 +1,8 @@
 package com.siso.web.userManage;
 
 import com.siso.Result.Result;
-import com.siso.dto.CMSPermissionDTO;
 import com.siso.dto.CMSUserDTO;
-import com.siso.entity.android.userManage.androidUser;
-import com.siso.entity.web.userManage.adminUser;
+import com.siso.entity.web.userManage.AdminUser;
 import com.siso.request.android.userManage.registerUserRequest;
 import com.siso.request.android.userManage.userLoginRequest;
 import com.siso.request.web.UserManage.editPasswordRequest;
@@ -22,7 +20,7 @@ public interface UserService {
 
 
 
-    adminUser userlogin1(String number);
+    AdminUser userlogin1(String number);
 
     // 用户注册
     public Result<String> userRegister(registerUserRequest registerUserRequest);
@@ -36,7 +34,7 @@ public interface UserService {
 
 
     // 下级查询(超管权限)
-    public List<adminUser> User_query_admin(String userNumber);
+    public List<AdminUser> User_query_admin(String userNumber);
 
 
     //删除下级员工

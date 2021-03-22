@@ -36,7 +36,7 @@ public class equipmentController {
     /** * 获取名下设备
      * @return */
     @ApiOperation(value = "获取名下所有设备")
-    @PostMapping(value = "/Equipment")//url注解，定义请求方式，字符串编码
+    @PostMapping(value = "/Equipment")
     @RequiresPermissions("equipment:eqseek")
     public Result<Page<adminEquipment>>findEquipment(@Valid @RequestBody PageEquipmentRequest request, BindingResult result){
         if (result.hasErrors()) {
@@ -51,7 +51,7 @@ public class equipmentController {
     /** * 划转名下设备
      * @return */
     @ApiOperation(value = "划转名下设备")
-    @PostMapping(value = "/updateEquipment")//url注解，定义请求方式，字符串编码
+    @PostMapping(value = "/updateEquipment")
     public  @ResponseBody Result<String> updateEquipment(@Valid @RequestBody UpdateEquipmentRequest request,BindingResult result){
         if (result.hasErrors()) {
             for (ObjectError error : result.getAllErrors()) {

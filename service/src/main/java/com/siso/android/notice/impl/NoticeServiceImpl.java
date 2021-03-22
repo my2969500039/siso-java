@@ -3,7 +3,7 @@ package com.siso.android.notice.impl;
 import com.siso.Result.Result;
 import com.siso.android.notice.noticeService;
 import com.siso.entity.android.noticet.Notice;
-import com.siso.entity.web.userManage.adminUser;
+import com.siso.entity.web.userManage.AdminUser;
 import com.siso.repository.android.notice.NoticeRepository;
 import com.siso.repository.web.userManage.UserRepository;
 import com.siso.request.android.noticet.noticeRequest;
@@ -39,7 +39,7 @@ public class NoticeServiceImpl implements noticeService {
     @Override
     public Result<noticeResponse> article(Long id, String type) {
         Notice notice=noticeRepository.findAllByTypeAndId(type,id);
-        adminUser adminUser=userRepository.findOneById(notice.getId());
+        AdminUser adminUser=userRepository.findOneById(notice.getId());
         noticeResponse noticeResponse=new noticeResponse();
         BeanUtils.copyProperties(notice,noticeResponse);
         noticeResponse.setAdmin(adminUser.getName());

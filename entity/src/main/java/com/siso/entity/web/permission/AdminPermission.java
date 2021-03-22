@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "admin_permission")
 @Table(name = "admin_permission")
-public class adminPermission extends BaseEntity {
+public class AdminPermission extends BaseEntity {
 
     private String remark;
 

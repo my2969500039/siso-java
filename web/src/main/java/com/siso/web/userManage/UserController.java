@@ -1,10 +1,7 @@
 package com.siso.web.userManage;
 
-import com.alibaba.fastjson.JSONObject;
-import com.siso.dto.CMSPermissionDTO;
 import com.siso.dto.CMSUserDTO;
-import com.siso.entity.android.userManage.androidUser;
-import com.siso.entity.web.userManage.adminUser;
+import com.siso.entity.web.userManage.AdminUser;
 import com.siso.request.android.userManage.registerUserRequest;
 import com.siso.request.android.userManage.userLoginRequest;
 import com.siso.request.web.UserManage.editPasswordRequest;
@@ -15,7 +12,6 @@ import com.siso.web.equipment.EquipmentService;
 import com.siso.web.street.AdminStreetService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -23,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -136,13 +131,13 @@ public class UserController {
     public @ResponseBody String add_user(@RequestParam("userNumber") String userNumber,
                                          @RequestParam("add_Number") String add_Number,@RequestParam("add_password") String add_password){
 
-        adminUser user=userService.userlogin1(userNumber);
+        AdminUser user=userService.userlogin1(userNumber);
         if (user.getAuthority().equals("4")){
             return re.pre(0,"False","权限不足!");
         }
 
         else {
-            adminUser user_add=userService.userlogin1(add_Number);
+            AdminUser user_add=userService.userlogin1(add_Number);
             if (user_add==null){
                 Boolean result=userService.User_add(userNumber,add_Number,add_password,Integer.decode(user.getAuthority())+1);
                 if (result){

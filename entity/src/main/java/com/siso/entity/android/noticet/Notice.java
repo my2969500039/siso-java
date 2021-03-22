@@ -1,7 +1,6 @@
 package com.siso.entity.android.noticet;
 
 import com.siso.BaseEntity;
-import com.siso.entity.web.userManage.adminUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

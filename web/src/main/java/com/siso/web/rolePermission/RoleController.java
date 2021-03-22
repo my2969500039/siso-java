@@ -1,11 +1,9 @@
 package com.siso.web.rolePermission;
 
 import com.siso.Result.Result;
-import com.siso.entity.web.permission.adminPermission;
 import com.siso.entity.web.role.Role;
 import com.siso.request.web.role.AddRoleRequest;
 import com.siso.request.web.role.SetRolePermissionRequest;
-import com.siso.response.web.UserManage.LoginResponse;
 import com.siso.response.web.permission.PermissionResponse;
 import com.siso.web.role.RoleService;
 import io.swagger.annotations.Api;

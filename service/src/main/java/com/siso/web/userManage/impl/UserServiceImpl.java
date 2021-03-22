@@ -3,11 +3,8 @@ package com.siso.web.userManage.impl;
 import com.siso.Result.Result;
 import com.siso.dto.CMSPermissionDTO;
 import com.siso.dto.CMSUserDTO;
-import com.siso.entity.android.userManage.androidUser;
-import com.siso.entity.web.permission.adminPermission;
-import com.siso.entity.web.permission.adminUserPermission;
-import com.siso.entity.web.role.UserRole;
-import com.siso.entity.web.userManage.adminUser;
+import com.siso.entity.web.permission.AdminPermission;
+import com.siso.entity.web.userManage.AdminUser;
 import com.siso.exception.NormalException;
 import com.siso.repository.android.userLogin.androidUserRepository;
 import com.siso.repository.web.role.RolePermissionRepository;
@@ -30,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -53,7 +49,7 @@ public class UserServiceImpl implements UserService {
     //用户登录
     @Override
     public Result<LoginResponse> userLogin(userLoginRequest request, HttpServletRequest httpServletRequest) {
-        adminUser aUsers = userRepository.findOneByNumber(request.getNumber());;
+        AdminUser aUsers = userRepository.findOneByNumber(request.getNumber());;
         if (aUsers==null){
             throw new NormalException("账号不存在");
         }
@@ -64,7 +60,7 @@ public class UserServiceImpl implements UserService {
             List<Long>permissionIds=rolePermissionRepository.findPermissionIdByRoleIdIn(roleIds);
             if (permissionIds.isEmpty())
                 throw new NormalException("权限不足");
-            List<adminPermission>adminPermissionList=adminPermissionRepository.findAllByIdIn(permissionIds);
+            List<AdminPermission>adminPermissionList=adminPermissionRepository.findAllByIdIn(permissionIds);
             List<CMSPermissionDTO> cmsPermissionDTOList=new ArrayList<>();
             adminPermissionList.forEach(a->{
                 CMSPermissionDTO cmsPermissionDTO=new CMSPermissionDTO();
@@ -85,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public  adminUser userlogin1(String number){
+    public AdminUser userlogin1(String number){
         return userRepository.findOneByNumber(number);
     };
 
@@ -99,7 +95,7 @@ public class UserServiceImpl implements UserService {
             throw new NormalException("账号已存在");
         if (userRepository.findOneByNumber(registerUserRequest.getSuperiorId())==null)
             throw new NormalException("上级不存在");
-        adminUser adminUser=new adminUser();
+        AdminUser adminUser=new AdminUser();
         BeanUtils.copyProperties(registerUserRequest,adminUser);
 //        adminUser.setAvailable(true);
         userRepository.save(adminUser);
@@ -111,7 +107,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result<List<CMSUserDTO>> userQuery(){
         CMSUserDTO cmsUserDTO=tokenUtils.getLoginUserDTO();
-        List<adminUser>adminUserList=userRepository.findAllByParentId(cmsUserDTO.getId());
+        List<AdminUser>adminUserList=userRepository.findAllByParentId(cmsUserDTO.getId());
         List<CMSUserDTO> cmsUserDTOList=new ArrayList<>();
         adminUserList.forEach(a->{
             CMSUserDTO cmsUser=new CMSUserDTO();
@@ -127,7 +123,7 @@ public class UserServiceImpl implements UserService {
         if (!request.getPassword().equals(request.getRepeatPassword()))
             throw new NormalException("重复密码不一致");
         CMSUserDTO cmsUserDTO=tokenUtils.getLoginUserDTO();
-        adminUser adminUser=userRepository.findOneById(cmsUserDTO.getId());
+        AdminUser adminUser=userRepository.findOneById(cmsUserDTO.getId());
         adminUser.setPassword(request.getPassword());
         userRepository.save(adminUser);
         return Result.<String>builder().success().message("修改成功").build();
@@ -136,7 +132,7 @@ public class UserServiceImpl implements UserService {
 
     // 下级查询管理员账号
     @Override
-    public List<adminUser> User_query_admin(String userNumber){
+    public List<AdminUser> User_query_admin(String userNumber){
         System.out.println("管理员"+userNumber+"查询用户数据");
         return userRepository.findAll();
     };
