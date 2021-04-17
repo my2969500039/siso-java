@@ -2,7 +2,9 @@ package com.siso;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -15,7 +17,6 @@ import java.util.Date;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
-
 
     @Id
     @GeneratedValue(generator = "snowFlakeId")
@@ -42,9 +43,7 @@ public abstract class BaseEntity {
     @ApiModelProperty(value = "修改时间")
     private Date updateTime;
 
-
     @ApiModelProperty(value = "排序")
     private Integer comparable;
-
 
 }

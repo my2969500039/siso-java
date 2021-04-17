@@ -72,7 +72,6 @@ public class EquipmentServiceImpl implements EquipmentService {
     };
 
 
-
     //划转名下设备
     @Override
     @Transactional

@@ -31,4 +31,5 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         this.chatHandler.seed(request.getTitle(),request.getContent(),request.getImage(),request.getId());
         return Result.<String>builder().success().data("推送成功").build();
     }
+
 }

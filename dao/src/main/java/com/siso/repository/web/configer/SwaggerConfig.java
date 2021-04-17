@@ -39,9 +39,6 @@ public class SwaggerConfig {
         //增加一个request的header参数
         tokenPar.name("Token").description("令牌").modelRef(new ModelRef("string")).parameterType("header").required(false).build();
         pars.add(tokenPar.build());
-        /**
-         * swagger需要扫描的包
-         */
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()

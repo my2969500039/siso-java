@@ -35,15 +35,12 @@ public class UserController {
     @Autowired
     private AdminStreetService adminstreetService;//超市相关Service
 
-
-
-
     Re re=new Re();
 
     /** * 用户登录
      * @return */
-    @ApiOperation(value = "用户登录", notes = "登录", code = 200, produces = "application/json")
-    @PostMapping(value = "/userLogin",produces="application/json;charset=UTF-8")//url注解，定义请求方式，字符串编码
+    @ApiOperation(value = "用户登录", notes = "登录")
+    @PostMapping(value = "/userLogin")
     public Result<LoginResponse> UserLogin(@Valid @RequestBody userLoginRequest request, BindingResult result, HttpServletRequest httpServletRequest) {//注解方式接收json数据
         if (result.hasErrors()) {
             for (ObjectError error : result.getAllErrors()) {

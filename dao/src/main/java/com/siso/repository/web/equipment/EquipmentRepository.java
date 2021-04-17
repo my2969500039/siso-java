@@ -19,5 +19,7 @@ public interface EquipmentRepository extends JpaRepository<adminEquipment,Long> 
 
     adminEquipment findOneById(Long id);
 
+    adminEquipment findAllByNumber(String number);
+
 
 }

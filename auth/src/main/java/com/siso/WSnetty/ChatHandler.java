@@ -6,6 +6,8 @@ import java.util.*;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.siso.Result.Result;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -15,80 +17,68 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 
 /**
  *
  * @Description: 处理消息的handler
  * TextWebSocketFrame： 在netty中，是用于为websocket专门处理文本的对象，frame是消息的载体
  */
-//public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 @Service("ServerRunner")
 public class ChatHandler{
-    public static Map<String, ChannelHandlerContext> jsonObjectweb = new HashMap();
-    public static Map<String, ChannelHandlerContext> jsonObjectsocket = new HashMap();
-    public static Map<ChannelHandlerContext, String> jsonObjectsocket2 = new HashMap();
-    public static Map<ChannelHandlerContext, List<String>> date = new HashMap();
+
 
     @Service
-    public static class socket extends SimpleChannelInboundHandler<String> {
+    @Component
+    public static class Socket extends SimpleChannelInboundHandler<String> {
 
-        private static final ChannelGroup clientsSocket =
-                new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+        private static final ChannelGroup clientsSocket = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+        private static final Map<Channel,String> channels =new HashMap<>();
 
-        modubs modubs1=new modubs();
-//        @Autowired
-//        private information information1;
-        information information1=new information();
+        public static Socket socket;
 
+        @Autowired
+        private ModubusChannel modubusChannel;
 
-        public void seed(String type,String name){
-//            jsonObjectsocket.get(name).writeAndFlush(modubs1.result(type));
+        @PostConstruct
+        public void  init(){
+            socket=this;
+            socket.modubusChannel=this.modubusChannel;
+
+        }
+
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+            if (evt instanceof IdleStateEvent) {
+                IdleState state = ((IdleStateEvent) evt).state();
+                if (state == IdleState.READER_IDLE) {
+                    ctx.writeAndFlush("heart");
+//                        ctx.disconnect();
+                }
+            } else {
+                super.userEventTriggered(ctx, evt);
+            }
         }
 
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, String msg)
                 throws Exception {
-            if (!date.containsKey(ctx)){
-                List<String> v=new ArrayList<>();
-                v.add(msg);
-                date.put(ctx,v);
+             if (channels.containsKey(ctx.channel())){
+
             }
-            else
-               date.get(ctx).add(msg);
-            //ChannelHandlerContext 返回事件的对象
-            // 收到消息直接打印输出
-//            if (msg.contains("3366")){
-//                String str="";
-//                for(String m:date.get(ctx)){
-//                    str+=m;
-//                }
-//                if (str.contains("3266") && str.indexOf("3266")<str.indexOf("3366")){//查找帧头帧尾
-//                    String result = str.substring( str.indexOf("3266"),  str.indexOf("3366")).substring("3266".length());//截取数据部分
-//                    if (modubs1.encode(result).equals("false")){//判断验证
-//                        ctx.write(modubs1.result("fail")+"\n");
-//                    }
-//                    else //验证成功
-//                    {
-//                        String res =information1.verification(modubs1.encode(result));
-//                        if (res.equals("flase")){
-//                            ctx.writeAndFlush(modubs1.result("fail")+"\n");
-//                        }
-//                        else {
-//                            ctx.writeAndFlush(modubs1.result("success") + "\n");
-//                            jsonObjectsocket.put(res,ctx);
-//                            jsonObjectsocket2.put(ctx,res);
-//                        }
-//
-//                    }
-//
-//                }
-//
-//                date.get(ctx).clear();
-//            }
+             else {
+                 Result result= socket.modubusChannel.register(msg);
+                 if (result.getCode()!=null&&result.getCode()==201){
+                     clientsSocket.add(ctx.channel());
+                     channels.put(ctx.channel(),result.getMessage());
+                     ctx.writeAndFlush("\\ACK");
+                 }
+             }
 
         }
-
 
         /**
          * 移除
@@ -97,18 +87,10 @@ public class ChatHandler{
          */
         @Override
         public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-                date.remove(ctx);
-            Collection<ChannelHandlerContext> col = jsonObjectsocket.values();
-            col.remove(ctx);
-            information1.state("0",jsonObjectsocket2.get(ctx));
-            jsonObjectsocket2.remove(ctx);
-//                System.out.println("客户端断开，channle对应的长id为："
-//                        + ctx.channel().id().asLongText());
-//                System.out.println("客户端断开，channle对应的短id为："
-//                        + ctx.channel().id().asShortText());
+            socket.modubusChannel.removeRegister(channels.get(ctx.channel()));
+            clientsSocket.remove(ctx.channel());
+            channels.remove(ctx.channel());
         }
-
-
 
         /*
          * 如果连接错误事件
@@ -134,20 +116,18 @@ public class ChatHandler{
     @Service
     public static class websocket extends SimpleChannelInboundHandler<TextWebSocketFrame> {
             // 用于记录和管理所有客户端的channle
-            public   static ChannelGroup clients =
+            public  static ChannelGroup clients =
                     new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-            public static  List<ChannelGroup>list=new ArrayList<>();
+//            public static  List<ChannelGroup>list=new ArrayList<>();
 
             @Override
             protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg)
                     throws Exception {
-                socket socket1 = new socket();
                 System.out.println(msg);
                 clients.writeAndFlush(
                         new TextWebSocketFrame(
                                 "[服务器在]" + LocalDateTime.now()
                                         + "接受到消息, 消息为：" + msg.text()));
-
             }
 
 
@@ -172,18 +152,18 @@ public class ChatHandler{
              * 当客户端连接服务端之后（打开连接）
              * 获取客户端的channle，并且放到ChannelGroup中去进行管理
              */
-            @Override
-            public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-                clients.add(ctx.channel());
-                list.add(clients);
+        @Override
+        public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+            clients.add(ctx.channel());
+//            list.add(clients);
 
-            }
+        }
 
 
             @Override
             public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
                 // 当触发handlerRemoved，ChannelGroup会自动移除对应客户端的channel
-//                         clients.remove(ctx.channel());
+                         clients.remove(ctx.channel());
                 System.out.println("客户端断开，channle对应的长id为："
                         + ctx.channel().id().asLongText());
                 System.out.println("客户端断开，channle对应的短id为："
@@ -196,9 +176,9 @@ public class ChatHandler{
                 if (evt instanceof IdleStateEvent) {
                     IdleState state = ((IdleStateEvent) evt).state();
                     if (state == IdleState.READER_IDLE) {
-                        // 在规定时间内没有收到客户端的上行数据, 主动断开连接
-//                     socketChannelMap.remove((SocketChannel) ctx.channel());
-                        ctx.disconnect();
+                        // 在规定时间内没有收到客户端的上行数据, 主动发送信息
+                        ctx.writeAndFlush("heart");
+//                        ctx.disconnect();
                     }
                 } else {
                     super.userEventTriggered(ctx, evt);

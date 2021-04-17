@@ -25,7 +25,6 @@
         <module>web</module>
         <module>auth</module>
         <module>core</module>
-        <module>test</module>
     </modules>
 
 

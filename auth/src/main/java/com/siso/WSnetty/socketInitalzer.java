@@ -25,7 +25,7 @@ public class socketInitalzer extends ChannelInitializer<SocketChannel> {
         pipeline2.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
         pipeline2.addLast(new StringDecoder());
         pipeline2.addLast(new StringEncoder());
-        pipeline2.addLast(new ChatHandler.socket());
+        pipeline2.addLast(new ChatHandler.Socket());
 
     }
 
