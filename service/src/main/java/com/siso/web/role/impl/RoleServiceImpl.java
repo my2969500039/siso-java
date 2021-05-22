@@ -1,6 +1,7 @@
 package com.siso.web.role.impl;
 
 import com.siso.Result.Result;
+import com.siso.entity.android.userManage.AndroidUser;
 import com.siso.entity.web.permission.AdminPermission;
 import com.siso.entity.web.role.Role;
 import com.siso.entity.web.role.RolePermission;
@@ -8,14 +9,21 @@ import com.siso.exception.NormalException;
 import com.siso.repository.web.permission.PermissionRepository;
 import com.siso.repository.web.role.RolePermissionRepository;
 import com.siso.repository.web.role.RoleRepository;
+import com.siso.request.web.member.SearchRequest;
 import com.siso.request.web.role.AddRoleRequest;
 import com.siso.request.web.role.SetRolePermissionRequest;
 import com.siso.response.web.permission.PermissionResponse;
 import com.siso.web.role.RoleService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -34,9 +42,17 @@ public class RoleServiceImpl implements RoleService {
     private RolePermissionRepository rolePermissionRepository;
 
     @Override
-    public Result<List<Role>> search() {
-        List<Role>roleList=roleRepository.findAll();
-        return Result.<List<Role>>builder().success().data(roleList).build();
+    public Result<Page<Role>> page(SearchRequest request){
+        Pageable pageable= PageRequest.of(request.getPageNum(), request.getPageSize());
+        Specification<Role> specification=(Specification<Role>)(root, cb, cq)->{
+            List<Predicate>predicates=new LinkedList<>();
+            if (StringUtils.isNotBlank(request.getKeyWord())){
+                predicates.add(cq.like(root.get("name"), request.getKeyWord()));
+            }
+            return cq.and(predicates.toArray(new Predicate[0]));
+        };
+        Page<Role> rolePage =roleRepository.findAll(specification,pageable);
+        return Result.<Page<Role>>builder().success().data(rolePage).build();
     }
 
     @Override

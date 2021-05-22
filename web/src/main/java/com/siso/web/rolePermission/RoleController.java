@@ -2,6 +2,7 @@ package com.siso.web.rolePermission;
 
 import com.siso.Result.Result;
 import com.siso.entity.web.role.Role;
+import com.siso.request.web.member.SearchRequest;
 import com.siso.request.web.role.AddRoleRequest;
 import com.siso.request.web.role.SetRolePermissionRequest;
 import com.siso.response.web.permission.PermissionResponse;
@@ -10,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +28,10 @@ public class RoleController {
     private RoleService roleService;
 
     @ApiOperation("获取所有角色")
-    @GetMapping("/role")
+    @PostMapping("/page")
     @RequiresPermissions("role:search")
-    public Result<List<Role>>search(){
-        return roleService.search();
+    public Result<Page<Role>>page(@RequestBody SearchRequest searchRequest){
+        return roleService.page(searchRequest);
     }
 
     @ApiOperation("添加角色")

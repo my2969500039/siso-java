@@ -1,15 +1,14 @@
 package com.siso.web.member;
 
 import com.siso.Result.Result;
-import com.siso.entity.android.userManage.androidUser;
+import com.siso.entity.android.userManage.AndroidUser;
+import com.siso.request.web.member.SearchRequest;
 import com.siso.response.android.login.userResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.hibernate.loader.custom.ResultRowProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,9 +20,9 @@ public class memberController {
     @Autowired
     private MemberService memberService;
 
-    @GetMapping("/members")
+    @PostMapping("/page")
     @ApiOperation("获取所有会员")
-    public Result<List<userResponse>> all(){
-        return memberService.all();
+    public Result<Page<AndroidUser>> page(@RequestBody SearchRequest request){
+        return memberService.page(request);
     }
 }

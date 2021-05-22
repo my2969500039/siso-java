@@ -2,7 +2,7 @@ package com.siso.token;
 
 import com.siso.dto.CMSPermissionDTO;
 import com.siso.dto.CMSUserDTO;
-import com.siso.entity.android.userManage.androidUser;
+import com.siso.entity.android.userManage.AndroidUser;
 import com.siso.entity.web.userManage.AdminUser;
 import com.siso.exception.NormalException;
 import com.siso.repository.web.userManage.UserRepository;
@@ -133,7 +133,7 @@ public class TokenUtils {
         }
     }
 
-    public String generateTokeCodeAndroid(androidUser cmsUser) {
+    public String generateTokeCodeAndroid(AndroidUser cmsUser) {
         CMSUserDTO cmsUserDTO = this.convertCMSUser(cmsUser);
         String value = System.currentTimeMillis() + new Random().nextInt() + "";
         //获取数据指纹，指纹是唯一的
@@ -190,7 +190,7 @@ public class TokenUtils {
     }
 
 
-    private CMSUserDTO convertCMSUser(androidUser cmsUser) {
+    private CMSUserDTO convertCMSUser(AndroidUser cmsUser) {
         CMSUserDTO parkUserDTO = new CMSUserDTO();
         BeanUtils.copyProperties(cmsUser, parkUserDTO);
         return parkUserDTO;

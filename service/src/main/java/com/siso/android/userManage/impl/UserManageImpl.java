@@ -4,7 +4,7 @@ import com.siso.Result.Result;
 import com.siso.dto.CMSUserDTO;
 import com.siso.exception.NormalException;
 import com.siso.android.userManage.UserManageService;
-import com.siso.entity.android.userManage.androidUser;
+import com.siso.entity.android.userManage.AndroidUser;
 import com.siso.repository.android.userLogin.androidUserRepository;
 import com.siso.repository.android.userLogin.userLoginRepository;
 import com.siso.request.android.userManage.userLoginRequest;
@@ -29,7 +29,7 @@ public class UserManageImpl implements UserManageService {
 
     @Override
     public Result<LoginResponse> androidUserLogin(userLoginRequest request){
-        androidUser androidUsers = androidUserRepository.findOneByNumber(request.getNumber());
+        AndroidUser androidUsers = androidUserRepository.findOneByNumber(request.getNumber());
         if (androidUsers==null){
             throw new NormalException("账号不存在");
         }
@@ -52,7 +52,7 @@ public class UserManageImpl implements UserManageService {
     @Override
     public Result<String> setPassword(String password) {
         CMSUserDTO androidUserDTO=tokenUtils.getLoginUserDTO();
-        androidUser androidUser=androidUserRepository.findOneById(androidUserDTO.getId());
+        AndroidUser androidUser=androidUserRepository.findOneById(androidUserDTO.getId());
         androidUser.setPassword(password);
         return Result.<String>builder().success().message("修改成功").build();
     }
@@ -62,7 +62,7 @@ public class UserManageImpl implements UserManageService {
         Long size=androidUserRepository.countAllByNumber(request.getNumber());
         if (size!=0)
             throw new NormalException("账号已存在");
-        androidUser androidUsers = new androidUser();
+        AndroidUser androidUsers = new AndroidUser();
         BeanUtils.copyProperties(request,androidUsers);
         androidUserRepository.save(androidUsers);
         return Result.<String>builder().success().message("注册成功").build();
