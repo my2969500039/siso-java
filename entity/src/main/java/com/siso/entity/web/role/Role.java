@@ -9,6 +9,7 @@ import org.hibernate.annotations.Table;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -22,6 +23,6 @@ public class Role extends BaseEntity {
     private String content;
     @Convert(converter = UserConverter.class)
     @Column(columnDefinition="varchar(200)")
-    private List<String> permissions;
+    private List<Long> permissions=new LinkedList<>();
 
 }

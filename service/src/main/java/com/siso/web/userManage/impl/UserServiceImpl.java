@@ -51,11 +51,16 @@ public class UserServiceImpl implements UserService {
             throw new NormalException("账号不存在");
         }
         if (aUsers.getPassword().equals(request.getPassword())){
+            if (aUsers.getRoleIds()==null){
+                throw new NormalException("未绑定角色");
+            }
             List<Role>roleList=roleRepository.findAllByIdIn(aUsers.getRoleIds());
             if (roleList.isEmpty())
-                throw new NormalException("未绑定角色");
-            List<Long>permissionIds=new LinkedList<>();
-            roleList.stream().map(a->permissionIds.addAll(a.getPermissions().stream().map(Long::parseLong).collect(Collectors.toList())));
+                throw new NormalException("权限不足");
+            List<Long>permissionIds= new LinkedList<>();
+            roleList.forEach(a->{
+                permissionIds.addAll(a.getPermissions());
+            });
             if (permissionIds.isEmpty())
                 throw new NormalException("权限不足");
             List<AdminPermission>adminPermissionList=adminPermissionRepository.findAllByIdIn(permissionIds);
