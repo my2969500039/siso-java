@@ -1,5 +1,6 @@
 package com.siso.web.member;
 
+import com.VT.section.interfaces.Access;
 import com.siso.Result.Result;
 import com.siso.entity.android.userManage.AndroidUser;
 import com.siso.request.web.member.SearchRequest;
@@ -22,6 +23,7 @@ public class memberController {
 
     @PostMapping("/page")
     @ApiOperation("获取所有会员")
+    @Access
     public Result<Page<AndroidUser>> page(@RequestBody SearchRequest request){
         return memberService.page(request);
     }

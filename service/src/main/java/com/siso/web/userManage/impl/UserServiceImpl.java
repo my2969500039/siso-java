@@ -4,11 +4,12 @@ import com.siso.Result.Result;
 import com.siso.dto.CMSPermissionDTO;
 import com.siso.dto.CMSUserDTO;
 import com.siso.entity.web.permission.AdminPermission;
+import com.siso.entity.web.role.Role;
 import com.siso.entity.web.userManage.AdminUser;
 import com.siso.exception.NormalException;
 import com.siso.repository.android.userLogin.androidUserRepository;
-import com.siso.repository.web.role.RolePermissionRepository;
-import com.siso.repository.web.role.UserRoleRepository;
+//import com.siso.repository.web.role.RolePermissionRepository;
+import com.siso.repository.web.role.RoleRepository;
 import com.siso.repository.web.userManage.AdminPermissionRepository;
 import com.siso.repository.web.userManage.UserRepository;
 import com.siso.repository.web.userManage.AdminUserPermissionRepository;
@@ -26,7 +27,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,15 +39,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private TokenUtils tokenUtils;
     @Resource
-    private androidUserRepository androidUserRepository;
-    @Resource
-    private AdminUserPermissionRepository adminUserPermissionRepository;
-    @Resource
     private AdminPermissionRepository adminPermissionRepository;
     @Autowired
-    private UserRoleRepository userRoleRepository;
-    @Autowired
-    private RolePermissionRepository rolePermissionRepository;
+    private RoleRepository roleRepository;
 
     //用户登录
     @Override
@@ -54,10 +51,11 @@ public class UserServiceImpl implements UserService {
             throw new NormalException("账号不存在");
         }
         if (aUsers.getPassword().equals(request.getPassword())){
-            List<Long>roleIds=userRoleRepository.findRoleIdByUserId(aUsers.getId());
-            if (roleIds.isEmpty())
+            List<Role>roleList=roleRepository.findAllByIdIn(aUsers.getRoleIds());
+            if (roleList.isEmpty())
                 throw new NormalException("未绑定角色");
-            List<Long>permissionIds=rolePermissionRepository.findPermissionIdByRoleIdIn(roleIds);
+            List<Long>permissionIds=new LinkedList<>();
+            roleList.stream().map(a->permissionIds.addAll(a.getPermissions().stream().map(Long::parseLong).collect(Collectors.toList())));
             if (permissionIds.isEmpty())
                 throw new NormalException("权限不足");
             List<AdminPermission>adminPermissionList=adminPermissionRepository.findAllByIdIn(permissionIds);

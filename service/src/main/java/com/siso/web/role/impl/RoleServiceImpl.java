@@ -4,10 +4,10 @@ import com.siso.Result.Result;
 import com.siso.entity.android.userManage.AndroidUser;
 import com.siso.entity.web.permission.AdminPermission;
 import com.siso.entity.web.role.Role;
-import com.siso.entity.web.role.RolePermission;
+//import com.siso.entity.web.role.RolePermission;
 import com.siso.exception.NormalException;
 import com.siso.repository.web.permission.PermissionRepository;
-import com.siso.repository.web.role.RolePermissionRepository;
+//import com.siso.repository.web.role.RolePermissionRepository;
 import com.siso.repository.web.role.RoleRepository;
 import com.siso.request.web.member.SearchRequest;
 import com.siso.request.web.role.AddRoleRequest;
@@ -38,8 +38,8 @@ public class RoleServiceImpl implements RoleService {
     private RoleRepository roleRepository;
     @Autowired
     private PermissionRepository permissionRepository;
-    @Autowired
-    private RolePermissionRepository rolePermissionRepository;
+//    @Autowired
+//    private RolePermissionRepository rolePermissionRepository;
 
     @Override
     public Result<Page<Role>> page(SearchRequest request){
@@ -90,15 +90,15 @@ public class RoleServiceImpl implements RoleService {
         Role role=roleRepository.findOneById(request.getRoleId());
         if (role==null)
             throw new NormalException("角色不存在");
-        rolePermissionRepository.deleteAllByRoleId(request.getRoleId());
-        List<RolePermission>rolePermissionList=new ArrayList<>();
-        request.getPermissionIds().forEach(permissionId->{
-            RolePermission permission=new RolePermission();
-            permission.setPermissionId(permissionId);
-            permission.setRoleId(request.getRoleId());
-            rolePermissionList.add(permission);
-        });
-        rolePermissionRepository.saveAll(rolePermissionList);
+//        rolePermissionRepository.deleteAllByRoleId(request.getRoleId());
+//        List<RolePermission>rolePermissionList=new ArrayList<>();
+//        request.getPermissionIds().forEach(permissionId->{
+//            RolePermission permission=new RolePermission();
+//            permission.setPermissionId(permissionId);
+//            permission.setRoleId(request.getRoleId());
+//            rolePermissionList.add(permission);
+//        });
+//        rolePermissionRepository.saveAll(rolePermissionList);
         return Result.<String>builder().success().message("添加成功").build();
     }
 

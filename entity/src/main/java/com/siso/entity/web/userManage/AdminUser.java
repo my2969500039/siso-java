@@ -20,6 +20,6 @@ public class AdminUser extends BaseEntity {
     private String name;
     @Convert(converter = UserConverter.class)
     @Column(columnDefinition="varchar(200)")
-    private List<String>roleIds;
+    private List<Long>roleIds;
 
 }

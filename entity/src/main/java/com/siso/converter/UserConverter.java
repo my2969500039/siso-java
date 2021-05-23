@@ -5,18 +5,19 @@ import javax.persistence.Converter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Converter
-public class UserConverter implements AttributeConverter<List<String>,String> {
+public class UserConverter implements AttributeConverter<List<Long>,String> {
 
         @Override
-        public String convertToDatabaseColumn(List<String> attribute) {
-            return attribute != null ? String.join(",", attribute) : null;
+        public String convertToDatabaseColumn(List<Long> attribute) {
+            return attribute != null ? String.join(",", (CharSequence) attribute) : null;
         }
 
         @Override
-        public List<String> convertToEntityAttribute(String dbData) {
-            return dbData != null ? new ArrayList<>(Arrays.asList(dbData.split(","))) : null;
+        public List<Long> convertToEntityAttribute(String dbData) {
+            return dbData != null ? Arrays.stream(dbData.split(",")).map(Long::parseLong).collect(Collectors.toList()) : null;
         }
 
 }

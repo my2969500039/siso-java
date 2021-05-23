@@ -27,12 +27,29 @@
         <module>core</module>
     </modules>
 
-
+    <repositories>
+        <repository>
+            <id>maven-snapshots</id>
+            <name>Spring Framework Maven Milestone Repository</name>
+            <url>http://siso.jonly.top:9093/repository/maven-snapshots</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.VT</groupId>
+            <artifactId>vien</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -45,7 +62,6 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.4</version>
         </dependency>
-
 
     </dependencies>
 
